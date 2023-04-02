@@ -1,0 +1,111 @@
+﻿
+@{
+    ViewBag.Title = "Chart2";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Google Grafikler</title>
+
+    <script src="~/AdminLTE-3.0.4/plugins/jquery/jquery.js"></script>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+
+
+    <script>
+
+        $(document).ready(function () {
+
+            $.ajax({
+
+                type: "POST",
+
+                dataType: "json",
+
+                contentType: "application/json",
+
+                url: "/Chart/VisualizeResult2",
+                success: function (result) {
+
+                    google.charts.load('current', {
+
+                        'packages': ['corechart']
+
+                    });
+
+                    google.charts.setOnLoadCallback(function () {
+
+                        drawChart(result);
+
+                    });
+
+                }
+
+            });
+
+        });
+
+
+
+        function drawChart(result) {
+
+            var data = new google.visualization.DataTable();
+
+            data.addColumn('string', 'Name');
+
+            data.addColumn('number', 'Rating');
+
+            var dataArray = [];
+
+
+
+            $.each(result, function (i, obj) {
+
+                dataArray.push([obj.BlogName, obj.BlogRating]);
+
+            });
+
+            data.addRows(dataArray);
+
+
+
+            var columnChartOptions = {
+
+                title: "Rating - Blog Grafiği",
+
+                width: 1000,
+
+                height: 600,
+
+                bar: { groupWidth: "20%" },
+
+            };
+
+
+
+            var columnChart = new google.visualization.ColumnChart(document
+
+                .getElementById('Piechart_div'));
+
+
+
+            columnChart.draw(data, columnChartOptions);
+
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+    <div id="Piechart_div"></div>
+
+</body>
+
+</html>
+
